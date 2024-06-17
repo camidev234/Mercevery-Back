@@ -9,10 +9,24 @@ class UserController {
         user_created: newUser,
       });
     } catch (error) {
-        const errorMessage = error.sqlMessage || 'Error al crear el usuario';
-        res.status(500).json({
-            message: 'Error to create a user: ', errorMessage
-        });
+      const errorMessage = error.sqlMessage || "Error al crear el usuario";
+      res.status(500).json({
+        message: "Error to create a user: ",
+        errorMessage,
+      });
+    }
+  };
+
+  static getUserById = async (req, res) => {
+    try {
+      const user = await User.find(req.params.id);
+      res.status(200).json(user);
+    } catch (error) {
+      const errorMessage =
+        error.sqlMessage || error.message || "Error al buscar el usuario";
+      res.status(500).json({
+        message: errorMessage,
+      });
     }
   };
 }
