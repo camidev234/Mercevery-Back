@@ -1,38 +1,22 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/database.js";
-import Role from "./Role.js";
-import Company from "./Company.js";
+import { pool } from "../config/database.js";
 
-const User = sequelize.define(
-  "User",
-  {
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    roleId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Role,
-        key: "id",
-      },
-    },
-  },
-  {
-    sequelize,
-    modelName: "User",
+class User {
+  constructor(id, email, password) {
+    this.id = id, 
+    this.email = email,
+    this.password = password;
   }
-);
 
-User.belongsTo(Role, { foreignKey: "roleId" });
-User.hasMany(Company, { foreignKey: "user_id" });
+  static async create (email, password) {
+    try {
+      const query = "INSERT INTO users (email,password) VALUES (?, ?)";
+      const [result] = await pool.query(query, [email, password]);
+      return new User(result.insertId, email, password);
+    } catch (error) {
+      console.log("An error ocurred: ", error.sqlMessage);
+      throw error;
+    }
+  };
+}
 
 export default User;
