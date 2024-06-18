@@ -2,6 +2,7 @@ import { pool } from "../config/database.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
+import UserResource from "../resources/UserResource.js";
 dotenv.config();
 
 
@@ -29,13 +30,9 @@ class AuthController {
         expiresIn: "1h",
       });
 
-      const userToReturn = {
-        id: userFind?.id,
-        email: userFind?.email,
-        role_id: userFind?.roleId
-      };
+      const userToReturn = await UserResource.user(userFind);
 
-    //   console.log(userFind);
+      console.log(userToReturn);
 
       res.json({
         access_token: token,

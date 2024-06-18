@@ -1,22 +1,27 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/database.js";
-import User from "./User.js";
+import { pool } from "../config/database.js";
 
-const Role = sequelize.define(
-  "Role",
-  {
-    role_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Role",
+class Role {
+
+  constructor(id, role_name) {
+    this.id = id;
+    this.role_name = role_name
   }
-);
 
-Role.hasMany(User, { foreignKey: "roleId" });
+  static find = async (id) => {
+    try {
+      const query = "SELECT * FROM roles WHERE id = ?";
+      const [rows] = await pool.query(query, [id]);
+      console.log(rows);
+      if(rows.length > 0) {
+        const role = rows[0];
+        return new Role(role.id, role.role_name);
+      }
+      throw new Error('Role not found');
+    } catch (error) {
+      console.log('An error ocurred: ', error);
+      throw error;
+    }
+  }
+}
 
 export default Role;
