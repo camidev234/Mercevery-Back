@@ -1,15 +1,17 @@
 import { pool } from "../config/database.js";
+// import CompanyController from "../controllers/CompanyController.js";
+// import Company from "./Company.js";
 
 class User {
-  constructor(id, email, password) {
-    (this.id = id), (this.email = email), (this.password = password);
+  constructor(id, email, password, roleId) {
+    (this.id = id), (this.email = email), (this.password = password), (this.roleId = roleId);
   }
 
-  static async create(email, password) {
+  static async create(email, password, roleId) {
     try {
-      const query = "INSERT INTO users (email,password) VALUES (?, ?)";
-      const [result] = await pool.query(query, [email, password]);
-      return new User(result.insertId, email, password);
+      const query = "INSERT INTO users (email,password, roleId) VALUES (?, ?, ?)";
+      const [result] = await pool.query(query, [email, password, roleId]);
+      return new User(result.insertId, email, password, roleId);
     } catch (error) {
       console.log("An error ocurred: ", error.sqlMessage);
       throw error;
