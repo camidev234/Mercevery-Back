@@ -1,6 +1,7 @@
 import { pool } from "../config/database.js";
 // import CompanyController from "../controllers/CompanyController.js";
 // import Company from "./Company.js";
+import bcrypt from 'bcryptjs';
 
 class User {
   constructor(id, email, password, roleId) {
@@ -9,9 +10,10 @@ class User {
 
   static async create(email, password, roleId) {
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const query = "INSERT INTO users (email,password, roleId) VALUES (?, ?, ?)";
-      const [result] = await pool.query(query, [email, password, roleId]);
-      return new User(result.insertId, email, password, roleId);
+      const [result] = await pool.execute(query, [email, hashedPassword, roleId]);
+      return new User(result.insertId, email, hashedPassword, roleId);
     } catch (error) {
       console.log("An error ocurred: ", error.sqlMessage);
       throw error;

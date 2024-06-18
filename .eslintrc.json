@@ -1,0 +1,12 @@
+// .eslintrc.json
+{
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      // Aquí puedes añadir reglas adicionales según tus preferencias
+    }
+  }
+  
