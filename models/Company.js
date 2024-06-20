@@ -1,4 +1,4 @@
-import { pool } from "../config/database.js";
+// import { pool } from "../config/database.js";
 
 class Company {
   constructor(id, cn, n, p, e, pa, ui) {
@@ -11,11 +11,11 @@ class Company {
       (this.user_id = ui);
   }
 
-  static create = async (cmp_name, nit, phone, email, prn_act, user_id) => {
+  static create = async (connection, cmp_name, nit, phone, email, prn_act, user_id) => {
     try {
       const query =
         "INSERT INTO companies (company_name, nit, phone_number, email, principal_activity, user_id) VALUES (?, ?, ?, ?, ?, ?)";
-      const [result] = await pool.query(query, [
+      const [result] = await connection.query(query, [
         cmp_name,
         nit,
         phone,

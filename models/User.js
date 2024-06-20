@@ -8,11 +8,11 @@ class User {
     (this.id = id), (this.email = email), (this.password = password), (this.roleId = roleId);
   }
 
-  static async create(email, password, roleId) {
+  static async create(connection ,email, password, roleId) {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       const query = "INSERT INTO users (email,password, roleId) VALUES (?, ?, ?)";
-      const [result] = await pool.execute(query, [email, hashedPassword, roleId]);
+      const [result] = await connection.execute(query, [email, hashedPassword, roleId]);
       return new User(result.insertId, email, hashedPassword, roleId);
     } catch (error) {
       console.log("An error ocurred: ", error.sqlMessage);
