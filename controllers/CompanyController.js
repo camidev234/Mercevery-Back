@@ -11,7 +11,7 @@ class CompanyController {
       user_id,
     } = req.body;
     try {
-      const newCompany = Company.create(
+      const newCompany = await Company.create(
         company_name,
         nit,
         phone_number,
@@ -19,12 +19,13 @@ class CompanyController {
         principal_activity,
         user_id
       );
+      console.log(newCompany);
       res.status(201).json({
         company_created: newCompany,
       });
     } catch (error) {
-      const errorMessage = error.sqlMessage || "Error to create company";
-      res.status().json({
+      const errorMessage = error.sqlMessage || error.error || "Error to create company";
+      res.status(500).json({
         message: errorMessage,
       });
     }

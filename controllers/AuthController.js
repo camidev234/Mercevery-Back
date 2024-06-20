@@ -1,10 +1,9 @@
 import { pool } from "../config/database.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import UserResource from "../resources/UserResource.js";
 dotenv.config();
-
 
 class AuthController {
   static authUser = async (req, res) => {
@@ -26,7 +25,7 @@ class AuthController {
         });
       }
 
-      const token = jwt.sign({ id: userFind.id }, 'mysecretkey123', {
+      const token = jwt.sign({ id: userFind.id }, "mysecretkey123", {
         expiresIn: "1h",
       });
 
@@ -36,7 +35,7 @@ class AuthController {
 
       res.json({
         access_token: token,
-        user: userToReturn
+        user: userToReturn,
       });
     } catch (error) {
       console.error("Login Error:", error.message);

@@ -3,7 +3,7 @@ import Role from "../models/Role.js";
 class UserResource {
   static user = async (userToConvert) => {
     try {
-        console.log(userToConvert);
+      console.log(userToConvert);
       const roleUser = await Role.find(userToConvert.roleId);
       const userToReturn = {
         id: userToConvert.id,
