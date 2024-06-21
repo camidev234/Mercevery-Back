@@ -1,4 +1,5 @@
 import { pool } from "../config/database.js";
+import Client from "../models/Client.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
 
@@ -25,6 +26,19 @@ class UserController {
         res.status(201).json({
           user_created: userResponse,
           company_created: newCompany
+        });
+      } else {
+        const newClient = await Client.create(
+          connection,
+          req.body.name,
+          req.body.last_name,
+          req.body.number_document,
+          newUser.id
+        );
+        await connection.commit();
+        res.status(201).json({
+          user_created: userResponse,
+          client_created: newClient
         });
       }
     } catch (error) {
