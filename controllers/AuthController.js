@@ -44,7 +44,7 @@ class AuthController {
       // console.log(userToReturn);
 
       // Response in JSON the user auth and access token
-      res.json({
+      res.status(200).json({
         access_token: token,
         user: userToReturn,
       });

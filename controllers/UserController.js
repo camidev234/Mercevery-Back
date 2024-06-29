@@ -9,8 +9,8 @@ class UserController {
     const { email, password, roleId } = req.body;
     try {
       await connection.beginTransaction();
-      const newUser = await User.create(connection ,email, password, roleId);
-      const userResponse = {...newUser};
+      const newUser = await User.create(connection, email, password, roleId);
+      const userResponse = { ...newUser };
       delete userResponse.password;
       if (req.body.roleId === 1) {
         const newCompany = await Company.create(
@@ -25,7 +25,7 @@ class UserController {
         await connection.commit();
         res.status(201).json({
           user_created: userResponse,
-          company_created: newCompany
+          company_created: newCompany,
         });
       } else {
         const newClient = await Client.create(
@@ -38,17 +38,26 @@ class UserController {
         await connection.commit();
         res.status(201).json({
           user_created: userResponse,
-          client_created: newClient
+          client_created: newClient,
         });
       }
     } catch (error) {
       await connection.rollback();
       const errorMessage = error.sqlMessage || "Error al crear el usuario";
       console.log(error);
-      res.status(500).json({
-        message: "Error to create a user: ",
-        errorMessage,
-      });
+      if (error.code === "ER_DUP_ENTRY") {
+        res.status(409).json({
+          message: "User exists",
+          errorMessage,
+          error_code: 409,
+        });
+      } else {
+        res.status(500).json({
+          message: "Error al crear el usuario",
+          errorMessage,
+          error_code: 500,
+        });
+      }
     }
   };
 
